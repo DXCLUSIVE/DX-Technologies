@@ -11,7 +11,7 @@ export default function Footer() {
           {/* About */}
           <div>
             <h3 className="font-bold text-lg mb-4 text-visa-gold">About VISA</h3>
-            <p className="text-sm text-gray-100">Viceroys Islamic Academy - Honing the Intellect, Moulding the Future and VISA to Global Success.</p>
+            <p className="text-sm text-gray-100">Viceroys Islamic Academy - Honing the Intellect, Moulding the Future and VISA to global success.</p>
           </div>
 
           {/* Quick Links */}
@@ -51,12 +51,11 @@ export default function Footer() {
                 <Mail size={18} className="mt-1 flex-shrink-0" />
                 <div>
                   <p>visaacademy01@gmail.com</p>
-                  <p>viceroysislamicacademy@gmail.com</p>
                 </div>
               </div>
               <div className="flex items-start gap-2">
                 <MapPin size={18} className="mt-1 flex-shrink-0" />
-                <p>BOSCO Building, Alangua Close, Ilorin, Kwara State, Nigeria</p>
+                <p>BOSCO Building, Alangua Close, Ilorin, Nigeria</p>
               </div>
             </div>
           </div>
