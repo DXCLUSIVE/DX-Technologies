@@ -1,12 +1,15 @@
 {
   "name": "viceroys-school-portal",
   "version": "1.0.0",
-  "description": "Official Portal for Viceroys Islamic Academy (VISA) - A secure gateway to academic excellence and school services",
+  "description": "Official Portal for Viceroys Islamic Academy (VISA) - Backend API & Database Integration",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -16,12 +19,16 @@
     "lucide-react": "^0.292.0",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.1.0"
+    "jsonwebtoken": "^9.1.0",
+    "@prisma/client": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^9.0.2",
     "postcss": "^8.4.0",
-    "autoprefixer": "^10.4.0"
+    "autoprefixer": "^10.4.0",
+    "prisma": "^5.0.0"
   }
 }

@@ -1,0 +1,161 @@
+// Database configuration with Prisma
+// Install: npm install @prisma/client
+// Setup: npx prisma init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String     // hashed with bcryptjs
+  fullName  String
+  role      Role       @default(PARENT)
+  phone     String?
+  avatar    String?
+  
+  student   Student?
+  teacher   Teacher?
+  payments  Payment[]
+  announcements Announcement[]
+  
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+enum Role {
+  PARENT
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+model Student {
+  id                String   @id @default(cuid())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String   @unique
+  admissionNumber   String   @unique
+  class             String
+  dateOfBirth       DateTime
+  
+  parentName        String?
+  parentPhone       String?
+  parentEmail       String?
+  guardianName      String?
+  guardianPhone     String?
+  
+  results           Result[]
+  fees              Fee[]
+  payments          Payment[]
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Teacher {
+  id                String   @id @default(cuid())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String   @unique
+  staffId           String   @unique
+  subject           String
+  classes           String[]
+  qualifications    String[]
+  yearsOfExperience Int
+  bio               String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Result {
+  id        String   @id @default(cuid())
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  
+  term      String   // First Term, Second Term, Third Term
+  year      Int
+  subject   String
+  ca        Int      // Continuous Assessment (0-100)
+  exam      Int      // Exam score (0-100)
+  total     Int      // Total score
+  grade     String   // A, B, C, D, E, F
+  remark    String   // Excellent, Good, Fair, Poor
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([studentId, term, year, subject])
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  student       Student?      @relation(fields: [studentId], references: [id])
+  studentId     String?
+  
+  amount        Float
+  description   String
+  paymentMethod PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  transactionId String?       @unique
+  
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+enum PaymentMethod {
+  CARD
+  BANK_TRANSFER
+  MOBILE_MONEY
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Fee {
+  id        String    @id @default(cuid())
+  student   Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId String
+  
+  term      String    // First Term, Second Term, Third Term
+  year      Int
+  amount    Float
+  status    FeeStatus @default(PENDING)
+  dueDate   DateTime
+  
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+enum FeeStatus {
+  PENDING
+  PAID
+  PARTIAL
+  OVERDUE
+}
+
+model Announcement {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  category    String   // Admission, Examination, Holiday, Results, Event, Finance
+  attachments String[]  // URLs or file paths
+  
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
